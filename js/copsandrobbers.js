@@ -238,13 +238,10 @@ var System = function(options) {
 
       self = rob.getPosition();
 
-      var closestCops = helper.getWithin(withinDistance, self, cops);
-      if (closestCops.length == 0)
-        closestCops = cops;
       //calculate vector first
       vec = [0, 0];
 
-      _.forEach(closestCops, function(cop) {
+      _.forEach(cops, function(cop) {
         other = cop.getPosition();
         mag = helper.getDistance(self, other);
         vec[0] += (self[0] - other[0]) / (mag * mag);
@@ -252,20 +249,16 @@ var System = function(options) {
       });
 
       mag = helper.getDistance(self, [self[0],0]);
-      //vec[0] += (self[0] - self[0]) / (mag * mag);
       vec[1] += (self[1]) / (mag * mag);
 
-      mag = helper.getDistance(self, [self[0],height]);
-      //vec[0] += (self[0] - self[0]) / (mag * mag);
+      mag = helper.getDistance(self, [self[0], height]);
       vec[1] += (self[1] - height) / (mag * mag);
 
       mag = helper.getDistance(self, [width,self[1]]);
       vec[0] += (self[0] - width) / (mag * mag);
-      //vec[1] += (self[1] - self[1]) / (mag * mag);
 
-      mag = helper.getDistance(self, [0,self[1]]);
+      mag = helper.getDistance(self, [0, self[1]]);
       vec[0] += (self[0]) / (mag * mag);
-      //vec[1] += (self[1]) / (mag * mag);
 
       rob.step(helper.normalizeVector(vec));
 
@@ -275,13 +268,9 @@ var System = function(options) {
 
       self = cop.getPosition();
 
-      var closestRobbers = helper.getWithin(withinDistance, self, robbers);
-      if (closestRobbers.length == 0)
-        closestRobbers = robbers;
-      //calculate vector first
       vec = [0, 0];
 
-      _.forEach(closestRobbers, function(rob) {
+      _.forEach(robbers, function(rob) {
         other = rob.getPosition();
         mag = helper.getDistance(self, other);
         vec[0] += (other[0] - self[0]) / (mag * mag); //reverse vector direction
@@ -348,10 +337,5 @@ var helper = {
       Math.pow(pnt2[0] - pnt1[0], 2) +
       Math.pow(pnt2[1] - pnt1[1], 2)
     );
-  },
-  getWithin: function(distance, centerPnt, entities) {
-    return _.filter(entities, function(ent) {
-      return helper.getDistance(centerPnt, ent.getPosition()) <= distance;
-    });
   }
 };
