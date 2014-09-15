@@ -186,20 +186,16 @@ var System = function(options) {
       });
 
       mag = helper.getDistance(self, [0, self[1]]);
-      //if (mag < withinDistance)
-        vec[0] += (self[0]) / (mag * mag);
+      vec[0] += (self[0]) / (mag * mag);
 
       mag = helper.getDistance(self, [self[0], 0]);
-      //if (mag < withinDistance)
-        vec[1] += (self[1]) / (mag * mag);
+      vec[1] += (self[1]) / (mag * mag);
 
       mag = helper.getDistance(self, [self[0], height]);
-    //  if (mag < withinDistance)
-        vec[1] += (self[1] - height) / (mag * mag);
+      vec[1] += (self[1] - height) / (mag * mag);
 
       mag = helper.getDistance(self, [width, self[1]]);
-    //  if (mag < withinDistance)
-        vec[0] += (self[0] - width) / (mag * mag);
+      vec[0] += (self[0] - width) / (mag * mag);
 
       rob.step(helper.normalizeVector(vec));
 
@@ -216,10 +212,10 @@ var System = function(options) {
         mag = helper.getDistance(self, other);
         vec[0] += (other[0] - self[0]) / (mag * mag); //reverse vector direction
         vec[1] += (other[1] - self[1]) / (mag * mag); //reverse vector direction
-        if (mag < rob.getRadius() * 2){
+        if (mag < rob.getRadius() * 2) {
           rob.setType('captured');
           var rad = cop.getRadius();
-          cop.setRadius(rad + rad*0.01);
+          cop.setRadius(rad + rad * 0.01);
         }
       });
 
