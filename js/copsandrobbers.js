@@ -64,6 +64,69 @@ var System = function(options) {
     }
   };
 
+  var insertBoundaryCops = function(){
+
+    entities.push(new Body({
+      borderX: {
+        min: 0,
+        max: width
+      },
+      borderY: {
+        min: 0,
+        max: height
+      },
+      start: [i * width / count, 0],
+      //  sentry: true,
+      type: 'boundaryCop',
+      radius: getRadiusByBrowser()
+    }));
+
+    entities.push(new Body({
+      borderX: {
+        min: 0,
+        max: width
+      },
+      borderY: {
+        min: 0,
+        max: height
+      },
+      start: [i * width / count, 0],
+      //  sentry: true,
+      type: 'boundaryCop',
+      radius: getRadiusByBrowser()
+    }));
+
+    entities.push(new Body({
+      borderX: {
+        min: 0,
+        max: width
+      },
+      borderY: {
+        min: 0,
+        max: height
+      },
+      start: [i * width / count, 0],
+      //  sentry: true,
+      type: 'boundaryCop',
+      radius: getRadiusByBrowser()
+    }));
+
+    entities.push(new Body({
+      borderX: {
+        min: 0,
+        max: width
+      },
+      borderY: {
+        min: 0,
+        max: height
+      },
+      start: [i * width / count, 0],
+      //  sentry: true,
+      type: 'boundaryCop',
+      radius: getRadiusByBrowser()
+    }));
+  };
+
   var insertCops = function() {
 
     var count = isMobile ? 2 : 3;
@@ -187,6 +250,22 @@ var System = function(options) {
         vec[0] += (self[0] - other[0]) / (mag * mag);
         vec[1] += (self[1] - other[1]) / (mag * mag);
       });
+
+      mag = helper.getDistance(self, [self[0],0]);
+      //vec[0] += (self[0] - self[0]) / (mag * mag);
+      vec[1] += (self[1]) / (mag * mag);
+
+      mag = helper.getDistance(self, [self[0],height]);
+      //vec[0] += (self[0] - self[0]) / (mag * mag);
+      vec[1] += (self[1] - height) / (mag * mag);
+
+      mag = helper.getDistance(self, [width,self[1]]);
+      vec[0] += (self[0] - width) / (mag * mag);
+      //vec[1] += (self[1] - self[1]) / (mag * mag);
+
+      mag = helper.getDistance(self, [0,self[1]]);
+      vec[0] += (self[0]) / (mag * mag);
+      //vec[1] += (self[1]) / (mag * mag);
 
       rob.step(helper.normalizeVector(vec));
 
