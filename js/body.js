@@ -21,12 +21,27 @@ var Body = function(options) {
     r = options.radius,
     tailLength = 15,
     opacity = 10,
-    copColor = 'rgba(171,241,55,' + opacity + ')',
-    copShadowColor = 'rgba(0,0,0,1)',
-    robColor = 'rgba(254,255,189,' + opacity + ')',
-    robShadowColor = 'rgba(0,0,0,1)',
     futurePos = [],
-    universlPos = options.start,
+    getColor = function() {
+      switch (TYPE) {
+        case 'captured':
+          return 'rgba(255,0,0,' + opacity + ')';
+        case 'cop':
+          return 'rgba(171,241,55,' + opacity + ')';
+        case 'robber':
+          return 'rgba(254,255,189,' + opacity + ')';
+      }
+    },
+    getShadowColor = function() {
+      switch (TYPE) {
+        case 'captured':
+          return 'rgba(0,0,0,1)';
+        case 'cop':
+          return 'rgba(0,0,0,1)';
+        case 'robber':
+          return 'rgba(0,0,0,1)';
+      }
+    },
     path = [];
 
   var getPrevPosition = function() {
@@ -55,9 +70,9 @@ var Body = function(options) {
 
   var step = function(delta) {
 
-    if (sentry) return; //sentries don't move
+    if (sentry || TYPE == 'captured') return; //sentries don't move
 
-    var speed = (TYPE == "cop") ? 2 : 2;
+    var speed = (TYPE == "cop") ? 2 : 1;
 
     //universlPos[0] += 1 * delta[0];
     //universlPos[1] += 1 * delta[1];
@@ -86,8 +101,8 @@ var Body = function(options) {
 
     context.beginPath();
 
-    context.fillStyle = (TYPE == 'cop') ? copColor : robColor;
-    context.shadowColor = (TYPE == 'cop') ? copShadowColor : robShadowColor;
+    context.fillStyle = getColor();
+    context.shadowColor = getShadowColor();
     context.arc(pnt[0] - r, pnt[1] - r, r, 0, 2 * Math.PI, false);
 
     context.closePath();
@@ -97,7 +112,7 @@ var Body = function(options) {
     context.fill();
 
     context.lineWidth = 1;
-    context.strokeStyle = (TYPE == 'cop') ? copColor : robColor;
+    context.strokeStyle = getColor();
     for (var i = 0, length = path.length; i < length - 1; i++) {
       context.moveTo(path[i][0] - r, path[i][1] - r);
       context.lineTo(path[i + 1][0] - r, path[i + 1][1] - r);
@@ -120,9 +135,15 @@ var Body = function(options) {
     },
     setType: function(val) {
       TYPE = val;
+      if (TYPE == 'captured') {
+        path = [];
+      }
     },
     getRadius: function() {
       return r;
+    },
+    setRadius: function(val){
+      r = val;
     },
     isSentry: function() {
       return sentry;

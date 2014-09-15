@@ -64,69 +64,6 @@ var System = function(options) {
     }
   };
 
-  var insertBoundaryCops = function(){
-
-    entities.push(new Body({
-      borderX: {
-        min: 0,
-        max: width
-      },
-      borderY: {
-        min: 0,
-        max: height
-      },
-      start: [i * width / count, 0],
-      //  sentry: true,
-      type: 'boundaryCop',
-      radius: getRadiusByBrowser()
-    }));
-
-    entities.push(new Body({
-      borderX: {
-        min: 0,
-        max: width
-      },
-      borderY: {
-        min: 0,
-        max: height
-      },
-      start: [i * width / count, 0],
-      //  sentry: true,
-      type: 'boundaryCop',
-      radius: getRadiusByBrowser()
-    }));
-
-    entities.push(new Body({
-      borderX: {
-        min: 0,
-        max: width
-      },
-      borderY: {
-        min: 0,
-        max: height
-      },
-      start: [i * width / count, 0],
-      //  sentry: true,
-      type: 'boundaryCop',
-      radius: getRadiusByBrowser()
-    }));
-
-    entities.push(new Body({
-      borderX: {
-        min: 0,
-        max: width
-      },
-      borderY: {
-        min: 0,
-        max: height
-      },
-      start: [i * width / count, 0],
-      //  sentry: true,
-      type: 'boundaryCop',
-      radius: getRadiusByBrowser()
-    }));
-  };
-
   var insertCops = function() {
 
     var count = isMobile ? 2 : 3;
@@ -213,7 +150,7 @@ var System = function(options) {
     var self = [],
       other = [],
       vec = [],
-      mag, withinDistance = 300;
+      mag, withinDistance = 100;
 
     if (mouseCop && !mcInserted) {
       entities.push(mouseCop);
@@ -248,17 +185,21 @@ var System = function(options) {
         vec[1] += (self[1] - other[1]) / (mag * mag);
       });
 
-      mag = helper.getDistance(self, [self[0],0]);
-      vec[1] += (self[1]) / (mag * mag);
+      mag = helper.getDistance(self, [0, self[1]]);
+      //if (mag < withinDistance)
+        vec[0] += (self[0]) / (mag * mag);
+
+      mag = helper.getDistance(self, [self[0], 0]);
+      //if (mag < withinDistance)
+        vec[1] += (self[1]) / (mag * mag);
 
       mag = helper.getDistance(self, [self[0], height]);
-      vec[1] += (self[1] - height) / (mag * mag);
+    //  if (mag < withinDistance)
+        vec[1] += (self[1] - height) / (mag * mag);
 
-      mag = helper.getDistance(self, [width,self[1]]);
-      vec[0] += (self[0] - width) / (mag * mag);
-
-      mag = helper.getDistance(self, [0, self[1]]);
-      vec[0] += (self[0]) / (mag * mag);
+      mag = helper.getDistance(self, [width, self[1]]);
+    //  if (mag < withinDistance)
+        vec[0] += (self[0] - width) / (mag * mag);
 
       rob.step(helper.normalizeVector(vec));
 
@@ -275,8 +216,11 @@ var System = function(options) {
         mag = helper.getDistance(self, other);
         vec[0] += (other[0] - self[0]) / (mag * mag); //reverse vector direction
         vec[1] += (other[1] - self[1]) / (mag * mag); //reverse vector direction
-        if (mag < rob.getRadius() * 2)
-          rob.setType("cop");
+        if (mag < rob.getRadius() * 2){
+          rob.setType('captured');
+          var rad = cop.getRadius();
+          cop.setRadius(rad + rad*0.01);
+        }
       });
 
       cop.step(helper.normalizeVector(vec));
