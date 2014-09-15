@@ -166,6 +166,10 @@ var System = function(options) {
       return ent.getType() == 'cop';
     });
 
+    var captured = _.filter(entities, function(ent) {
+      return ent.getType() == 'captured';
+    });
+
     if (robbers.length === 0) {
       setup();
       return;
@@ -183,6 +187,16 @@ var System = function(options) {
         mag = helper.getDistance(self, other);
         vec[0] += (self[0] - other[0]) / (mag * mag);
         vec[1] += (self[1] - other[1]) / (mag * mag);
+      });
+
+      _.forEach(captured, function(cap) {
+        other = cap.getPosition();
+        mag = helper.getDistance(self, other);
+        if (mag < cap.getRadius() * 2) {
+          cap.setType('robber');
+          // var rad = cop.getRadius();
+          // cop.setRadius(rad + rad * 0.01);
+        }
       });
 
       mag = helper.getDistance(self, [0, self[1]]);
@@ -214,8 +228,8 @@ var System = function(options) {
         vec[1] += (other[1] - self[1]) / (mag * mag); //reverse vector direction
         if (mag < rob.getRadius() * 2) {
           rob.setType('captured');
-          var rad = cop.getRadius();
-          cop.setRadius(rad + rad * 0.01);
+          //var rad = cop.getRadius();
+          //cop.setRadius(rad + rad * 0.01);
         }
       });
 
