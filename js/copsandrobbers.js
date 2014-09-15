@@ -238,9 +238,7 @@ var System = function(options) {
   };
 
   var drawSystem = function() {
-
     context.clearRect(0, 0, width, height);
-
     _.forEach(entities, function(ent) {
       ent.draw(context);
     });
