@@ -72,7 +72,7 @@ var Body = function(options) {
 
     if (sentry || TYPE == 'captured') return; //sentries don't move
 
-    var speed = (TYPE == "cop") ? 2 : 1;
+    var speed = (TYPE == "cop") ? 4 : 2;
 
     //universlPos[0] += 1 * delta[0];
     //universlPos[1] += 1 * delta[1];
