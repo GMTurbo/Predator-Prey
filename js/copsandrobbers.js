@@ -150,7 +150,7 @@ var System = function(options) {
     var self = [],
       other = [],
       vec = [],
-      mag, withinDistance = 100;
+      mag, withinDistance = 50, sliceCount = 10;
 
     if (mouseCop && !mcInserted) {
       entities.push(mouseCop);
@@ -175,14 +175,21 @@ var System = function(options) {
       return;
     }
 
+    var within = [];
+
     _.forEach(robbers, function(rob) {
 
       self = rob.getPosition();
 
+      within = helper.getClosest(cops, self, sliceCount);//getWithin(cops, self, withinDistance);
+
+      if (within.length == 0)
+        within = cops;
+
       //calculate vector first
       vec = [0, 0];
 
-      _.forEach(cops, function(cop) {
+      _.forEach(within, function(cop) {
         other = cop.getPosition();
         mag = helper.getDistance(self, other);
         vec[0] += (self[0] - other[0]) / (mag * mag);
@@ -219,9 +226,14 @@ var System = function(options) {
 
       self = cop.getPosition();
 
+      within = helper.getClosest(robbers, self, sliceCount);
+
+      if (within.length == 0)
+        within = robbers;
+
       vec = [0, 0];
 
-      _.forEach(robbers, function(rob) {
+      _.forEach(within, function(rob) {
         other = rob.getPosition();
         mag = helper.getDistance(self, other);
         vec[0] += (other[0] - self[0]) / (mag * mag); //reverse vector direction
@@ -284,10 +296,22 @@ var helper = {
     vec[1] /= mag;
     return vec;
   },
+  getWithin: function(arr, target, distance) {
+    return _.filter(arr, function(pnt) {
+      return helper.getDistance(target, pnt.getPosition()) <= distance;
+    });
+  },
   getDistance: function(pnt1, pnt2) {
     return Math.sqrt(
       Math.pow(pnt2[0] - pnt1[0], 2) +
       Math.pow(pnt2[1] - pnt1[1], 2)
     );
+  },
+  getClosest: function(arr, target, count) {
+    var sorted = _.sortBy(arr, function(pnt) {
+      return helper.getDistance(target, pnt.getPosition());
+    });
+
+    return sorted.slice(0,count);
   }
 };
